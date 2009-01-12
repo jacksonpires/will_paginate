@@ -25,6 +25,8 @@ module WillPaginate
       :class          => 'pagination',
       :previous_label => '&laquo; Previous',
       :next_label     => 'Next &raquo;',
+      :previous_link  => true,
+      :next_link      => true,
       :inner_window   => 4, # links around the current page
       :outer_window   => 1, # links around beginning and end
       :separator      => ' ', # single space is friendly to spiders and non-graphic browsers
@@ -44,6 +46,8 @@ module WillPaginate
     # Display options:
     # * <tt>:previous_label</tt> -- default: "« Previous" (this parameter is called <tt>:prev_label</tt> in versions <b>2.3.2</b> and older!)
     # * <tt>:next_label</tt> -- default: "Next »"
+    # * <tt>:previous_link</tt> -- when false the previous button is not rendered (default: true)
+    # * <tt>:next_link</tt> -- when false the next button is not rendered (default: true)
     # * <tt>:page_links</tt> -- when false, only previous/next links are rendered (default: true)
     # * <tt>:inner_window</tt> -- how many links are shown around the current page (default: 4)
     # * <tt>:outer_window</tt> -- how many links are around the first and the last page (default: 1)
@@ -230,8 +234,10 @@ module WillPaginate
     def to_html
       links = @options[:page_links] ? windowed_links : []
       # previous/next buttons
-      links.unshift page_link_or_span(@collection.previous_page, 'disabled prev_page', @options[:previous_label])
-      links.push    page_link_or_span(@collection.next_page,     'disabled next_page', @options[:next_label])
+      links.unshift page_link_or_span(@collection.previous_page, 'disabled prev_page',
+       @options[:prev_label]) if @options[:previous_link]
+      links.push    page_link_or_span(@collection.next_page,     'disabled next_page',
+       @options[:next_label]) if @options[:next_link]
       
       html = links.join(@options[:separator])
       @options[:container] ? @template.content_tag(:div, html, html_attributes) : html
